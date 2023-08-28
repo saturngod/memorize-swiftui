@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    let emojis = ["👻","🐵","🐶","🐷","🌝","🔥","⛈️","🐚","🐼", "🐙" , "🐢","🦀"]
+struct EmojiMemoryGameView: View {
+    
+    @ObservedObject var viewModel: EmojMemoryGame
+    
     
     @State var cardCount = 4
     
@@ -17,8 +19,9 @@ struct ContentView: View {
             ScrollView{
                 cards
             }
-            Spacer()
-            cardCounterAdjuster
+            Button("Shuffle") {
+                viewModel.shuffle()
+            }
         }
         .padding()
         
@@ -48,7 +51,7 @@ struct ContentView: View {
         }, label: {
             Image(systemName: symbols)
         })
-        .disabled(cardCount + offset > emojis.count || cardCount + offset < 1)
+        .disabled(cardCount + offset > viewModel.cards.count || cardCount + offset < 1)
         
     }
         
@@ -62,11 +65,12 @@ struct ContentView: View {
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))])
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120),spacing: 0)], spacing: 0)
         {
-            ForEach(0..<cardCount,id:\.self) { index in
-                CardView(content: emojis[index])
+            ForEach(viewModel.cards.indices,id:\.self) { index in
+                CardView(viewModel.cards[index])
                     .aspectRatio(2/3, contentMode: .fit)
+                    .padding(4)
             }
         }
         .foregroundColor(.orange)
@@ -76,8 +80,8 @@ struct ContentView: View {
 
 
 
-struct ContentView_Previews: PreviewProvider {
+struct EmojiMemoryGameView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        EmojiMemoryGameView(viewModel: EmojMemoryGame())
     }
 }

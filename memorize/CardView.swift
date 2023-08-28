@@ -10,8 +10,11 @@ import SwiftUI
 
 struct CardView: View {
     
-    var content: String = ""
-    @State var isFaceUp: Bool = true
+    var card: MemoryGame<String>.Card
+    
+    init(_ card: MemoryGame<String>.Card) {
+        self.card = card
+    }
     
     var body: some View {
         let base = RoundedRectangle(cornerRadius: 12)
@@ -20,15 +23,16 @@ struct CardView: View {
                 base.fill(.white)
                 base
                     .strokeBorder(lineWidth: 2)
-                Text(content).font(.largeTitle)
+                Text(card.content)
+                    .font(.system(size:200))
+                    .minimumScaleFactor(0.01)
+                    .aspectRatio(1,contentMode: .fit)
             }
-            .opacity(isFaceUp ? 1 : 0)
+            .opacity(card.isFaceUp ? 1 : 0)
            
-            base.fill().opacity(isFaceUp ? 0 : 1)
+            base.fill().opacity(card.isFaceUp ? 0 : 1)
             
         }
-        .onTapGesture {
-            isFaceUp.toggle()
-        }
+        
     }
 }
