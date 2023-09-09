@@ -11,7 +11,7 @@ struct AspectVGrid<Item: Identifiable, ItemView: View>: View {
     
     var items: [Item]
     var aspectRatio: CGFloat = 1
-    var content: (Item) -> ItemView
+    @ViewBuilder var content: (Item) -> ItemView
     
     var body: some View {
         GeometryReader { geometry in
@@ -25,6 +25,7 @@ struct AspectVGrid<Item: Identifiable, ItemView: View>: View {
             {
                 ForEach(items) { item in
                     content(item)
+                        .aspectRatio(aspectRatio, contentMode: .fit)
                 }
             }
         }

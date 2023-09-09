@@ -65,18 +65,22 @@ struct EmojiMemoryGameView: View {
         cardCounterAdjuster(by: -1, symbols: "folder.fill.badge.minus")
     }
     
-    @ViewBuilder
-    var cards: some View {
+    
+    private var cards: some View {
         
-       
         AspectVGrid(items: viewModel.cards,aspectRatio: aspectRatio) { card in
+            if card.id.last == "b" {
+                VStack {
+                    CardView(card)
                     
-                        CardView(card)
-                            .aspectRatio(aspectRatio, contentMode: .fit)
-                            .padding(4)
-                            .onTapGesture {
-                                viewModel.choose(card)
-                            }
+                        .padding(4)
+                        .onTapGesture {
+                            viewModel.choose(card)
+                        }
+                    Text(card.id)
+                }
+            }
+             
                     
         }
            
