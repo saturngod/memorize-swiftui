@@ -10,7 +10,7 @@ import SwiftUI
 struct EmojiMemoryGameView: View {
     
     @ObservedObject var viewModel: EmojMemoryGame
-    
+    let aspectRatio: CGFloat = 2/3
     
     @State var cardCount = 4
     
@@ -68,64 +68,25 @@ struct EmojiMemoryGameView: View {
     @ViewBuilder
     var cards: some View {
         
-        let aspectRadio: CGFloat = 2/3
-        GeometryReader { geometry in
-            
-            let gridItemSize = gridItemWidthThatFits(
-                count: viewModel.cards.count,
-                size: geometry.size,
-                atAspectRatio: aspectRadio)
-            
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: gridItemSize),spacing: 0)], spacing: 0)
-            {
-                ForEach(viewModel.cards) { card in
+       
+        AspectVGrid(items: viewModel.cards,aspectRatio: aspectRatio) { card in
                     
                         CardView(card)
-                            .aspectRatio(aspectRadio, contentMode: .fit)
+                            .aspectRatio(aspectRatio, contentMode: .fit)
                             .padding(4)
                             .onTapGesture {
                                 viewModel.choose(card)
                             }
                     
-                }
-            }
         }
+           
         
         .foregroundColor(.orange)
     }
     
 }
 
-func gridItemWidthThatFits(
-    count: Int,
-    size: CGSize,
-    atAspectRatio aspectRadio: CGFloat
-) -> CGFloat {
-    
-    
-    
-    let count = CGFloat(count)
-    var columnCount = 1.0
-    
-    repeat {
-        let width = size.width / columnCount
-        let height = width / aspectRadio
-        
-        let rowCount = (count/columnCount).rounded(.up)
-        
-        if rowCount * height < size.height {
-            print("HERE")
-            return (size.width / columnCount).rounded(.down)
-        }
-        columnCount += 1
-        
-    } while columnCount < count
-    
-    print("SIZE HEIGHT \(size.height)")
-          
-    return min(size.width / count, size.height * aspectRadio).rounded(.down)
-    
-}
+
 
 
 
