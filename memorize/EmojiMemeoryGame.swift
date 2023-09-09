@@ -13,12 +13,12 @@ import SwiftUI
 class EmojMemoryGame: ObservableObject {
     
 
-    private static let emojis = ["👻","🐵","🐶","🐷","🌝","🔥","⛈️","🐚","🐼", "🐙" , "🐢","🦀"]
+    private static let emojis = ["👻","🐵","🐶","🐷","🌝","🔥","⛈️","🐚","🐼", "🐙" , "🐢","🦀","🦄","🕷️","🦫"]
     
     
     
     private static func createMemoryGame() -> MemoryGame<String> {
-        return MemoryGame(numberOfParisOfCards: 6) { pairIndex in
+        return MemoryGame(numberOfParisOfCards: 10) { pairIndex in
             if emojis.indices.contains(pairIndex) {
                 return emojis[pairIndex]
             }

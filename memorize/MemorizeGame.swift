@@ -10,23 +10,27 @@ import Foundation
 
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
-    private(set) var cards: Array<Card>
+    
+    private(set) var cards: Array<Card> = []
     
     
     init(numberOfParisOfCards: Int, cardContentFactory: (Int) -> CardContent) {
-        cards = []
+        
         for pairIndex in 0..<numberOfParisOfCards {
             let content: CardContent = cardContentFactory(pairIndex)
-            cards.append(Card(id: "\(pairIndex+1)a", content: content))
-            cards.append(Card( id: "\(pairIndex+1)b", content: content))
+            self.cards.append(Card(id: "\(pairIndex+1)a", content: content))
+            self.cards.append(Card( id: "\(pairIndex+1)b", content: content))
         }
+        
+        
+        
         
     }
     
     // MARK: - Intents
     
     mutating func shuffle() {
-        cards.shuffle()
+        self.cards.shuffle()
     }
     
     var indexOfTheOneAndOnlyFaceUpCard: Int? {

@@ -16,15 +16,15 @@ struct EmojiMemoryGameView: View {
     
     var body: some View {
         VStack {
-            ScrollView{
-                cards
-                    .animation(.default, value: viewModel.cards)
-            }
+            
+            cards.animation(.default, value: viewModel.cards)
+            
             Button("Shuffle") {
                 viewModel.shuffle()
             }
         }
         .padding()
+        
         
         
     }
@@ -66,21 +66,63 @@ struct EmojiMemoryGameView: View {
     }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120),spacing: 0)], spacing: 0)
-        {
-            ForEach(viewModel.cards) { card in
-                
-                    CardView(card)
-                        .aspectRatio(2/3, contentMode: .fit)
-                        .padding(4)
-                        .onTapGesture {
-                            viewModel.choose(card)
-                        }
-                
+        
+        let aspectRadio: CGFloat = 2/3
+        return GeometryReader { geometry in
+            
+            let gridItemSize = gridItemWidthThatFits(
+                count: viewModel.cards.count,
+                size: geometry.size,
+                atAspectRatio: aspectRadio)
+            
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: gridItemSize),spacing: 0)], spacing: 0)
+            {
+                ForEach(viewModel.cards) { card in
+                    
+                        CardView(card)
+                            .aspectRatio(aspectRadio, contentMode: .fit)
+                            .padding(4)
+                            .onTapGesture {
+                                viewModel.choose(card)
+                            }
+                    
+                }
             }
         }
+        
         .foregroundColor(.orange)
     }
+    
+}
+
+func gridItemWidthThatFits(
+    count: Int,
+    size: CGSize,
+    atAspectRatio aspectRadio: CGFloat
+) -> CGFloat {
+    
+    
+    
+    let count = CGFloat(count)
+    var columnCount = 1.0
+    
+    repeat {
+        let width = size.width / columnCount
+        let height = width / aspectRadio
+        
+        let rowCount = (count/columnCount).rounded(.up)
+        
+        if rowCount * height < size.height {
+            print("HERE")
+            return (size.width / columnCount).rounded(.down)
+        }
+        columnCount += 1
+        
+    } while columnCount < count
+    
+    print("SIZE HEIGHT \(size.height)")
+          
+    return min(size.width / count, size.height * aspectRadio).rounded(.down)
     
 }
 
