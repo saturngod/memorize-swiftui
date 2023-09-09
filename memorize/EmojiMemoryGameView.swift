@@ -65,10 +65,11 @@ struct EmojiMemoryGameView: View {
         cardCounterAdjuster(by: -1, symbols: "folder.fill.badge.minus")
     }
     
+    @ViewBuilder
     var cards: some View {
         
         let aspectRadio: CGFloat = 2/3
-        return GeometryReader { geometry in
+        GeometryReader { geometry in
             
             let gridItemSize = gridItemWidthThatFits(
                 count: viewModel.cards.count,
