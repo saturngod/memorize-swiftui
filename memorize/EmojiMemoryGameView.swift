@@ -14,10 +14,16 @@ struct EmojiMemoryGameView: View {
     
     @State var cardCount = 4
     
+    private let spacing: CGFloat = 4
+    
+    
+    
     var body: some View {
         VStack {
             
-            cards.animation(.default, value: viewModel.cards)
+            cards
+                .foregroundColor(viewModel.color)
+                .animation(.default, value: viewModel.cards)
             
             Button("Shuffle") {
                 viewModel.shuffle()
@@ -69,23 +75,18 @@ struct EmojiMemoryGameView: View {
     private var cards: some View {
         
         AspectVGrid(items: viewModel.cards,aspectRatio: aspectRatio) { card in
-            if card.id.last == "b" {
-                VStack {
+                
                     CardView(card)
-                    
-                        .padding(4)
+                        .padding(spacing)
                         .onTapGesture {
                             viewModel.choose(card)
                         }
-                    Text(card.id)
-                }
-            }
-             
+                  
                     
         }
            
         
-        .foregroundColor(.orange)
+       
     }
     
 }
