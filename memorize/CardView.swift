@@ -36,20 +36,34 @@ struct CardView: View {
     
     var body: some View {
        
-        Pie(endAngle: .degrees(200))
-
-            .opacity(Constants.Pie.opacity)
-            .overlay(
-                Text(card.content)
-                    .font(.system(size:Constants.FontSize.largest))
-                    .minimumScaleFactor(Constants.FontSize.scalFactor)
-                    .multilineTextAlignment(.center)
-                    .aspectRatio(1,contentMode: .fit)
-            )
-            .padding(Constants.Pie.inset)
-            .cardify(isFaceUp: card.isFaceUp)
-        .opacity(card.isFaceUp || !card.isMatched ? 1 : 0)
+        TimelineView(.animation) { timeline in
+            
+            if(card.isFaceUp || !card.isMatched) {
+                Pie(endAngle: .degrees(card.bonusPercentRemaining * 360))
+                
+                    .opacity(Constants.Pie.opacity)
+                    .overlay(cardContents.padding(Constants.Pie.inset))
+                    .padding(Constants.Pie.inset)
+                    .cardify(isFaceUp: card.isFaceUp)
+                    .transition(.opacity)
+            } else {
+                Color.clear
+            }
+            
+            
+        }
         
+        
+    }
+    
+    var cardContents: some View {
+        Text(card.content)
+            .font(.system(size:Constants.FontSize.largest))
+            .minimumScaleFactor(Constants.FontSize.scalFactor)
+            .multilineTextAlignment(.center)
+            .aspectRatio(1,contentMode: .fit)
+            .rotationEffect(.degrees(card.isMatched ? 360 : 0))
+            .animation(.easeIn(duration: 2).repeatForever(autoreverses: false), value: card.isMatched)
     }
 }
 
@@ -59,12 +73,11 @@ struct CardView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
             HStack {
-                CardView(Card(id: "test", isFaceUp: true, content: "This is long content for showing the card and fit it"))
-                CardView(Card(id: "test", content: "This is long content for showing the card and fit it"))
+              
+               
             }
             HStack {
-                CardView(Card(id: "test", isFaceUp: true, content: "This is long content for showing the card and fit it"))
-                CardView(Card(id: "test", content: "This is long content for showing the card and fit it"))
+              
             }
         }
         .padding()
